@@ -1,4 +1,4 @@
-module Gelauto
+module YarnAnnotate
   class Type
     def self.introspect(obj)
       new(obj.class)

@@ -1,23 +1,23 @@
 require 'logger'
 require 'parser/current'
 
-module Gelauto
-  autoload :ArgList,     'gelauto/arg_list'
-  autoload :ArrayType,   'gelauto/array_type'
-  autoload :BooleanType, 'gelauto/boolean_type'
-  autoload :CLIUtils,    'gelauto/cli_utils'
-  autoload :GenericType, 'gelauto/generic_type'
-  autoload :HashType,    'gelauto/hash_type'
-  autoload :Logger,      'gelauto/logger'
-  autoload :MethodDef,   'gelauto/method_def'
-  autoload :MethodIndex, 'gelauto/method_index'
-  autoload :Namespace,   'gelauto/namespace'
-  autoload :NullLogger,  'gelauto/null_logger'
-  autoload :Rbi,         'gelauto/rbi'
-  autoload :Type,        'gelauto/type'
-  autoload :TypeSet,     'gelauto/type_set'
-  autoload :Utils,       'gelauto/utils'
-  autoload :Var,         'gelauto/var'
+module YarnAnnotate
+  autoload :ArgList,     'yarn_annotate/arg_list'
+  autoload :ArrayType,   'yarn_annotate/array_type'
+  autoload :BooleanType, 'yarn_annotate/boolean_type'
+  autoload :CLIUtils,    'yarn_annotate/cli_utils'
+  autoload :GenericType, 'yarn_annotate/generic_type'
+  autoload :HashType,    'yarn_annotate/hash_type'
+  autoload :Logger,      'yarn_annotate/logger'
+  autoload :MethodDef,   'yarn_annotate/method_def'
+  autoload :MethodIndex, 'yarn_annotate/method_index'
+  autoload :Namespace,   'yarn_annotate/namespace'
+  autoload :NullLogger,  'yarn_annotate/null_logger'
+  autoload :Rbi,         'yarn_annotate/rbi'
+  autoload :Type,        'yarn_annotate/type'
+  autoload :TypeSet,     'yarn_annotate/type_set'
+  autoload :Utils,       'yarn_annotate/utils'
+  autoload :Var,         'yarn_annotate/var'
 
   class << self
     attr_accessor :paths
@@ -56,15 +56,15 @@ module Gelauto
     end
 
     def types
-      @types ||= Hash.new(Gelauto::Type)
+      @types ||= Hash.new(YarnAnnotate::Type)
     end
 
     def introspect(obj)
-      Gelauto.types[obj.class].introspect(obj)
+      YarnAnnotate.types[obj.class].introspect(obj)
     end
 
     def annotate_file(path)
-      annotated_code = Gelauto.method_index.annotate(path, File.read(path))
+      annotated_code = YarnAnnotate.method_index.annotate(path, File.read(path))
       File.write(path, annotated_code)
     end
 
@@ -91,9 +91,9 @@ module Gelauto
             path, Parser::CurrentRuby.parse(File.read(path))
           )
 
-          Gelauto::Logger.info("Indexed #{idx + 1}/#{paths.size} paths")
+          YarnAnnotate::Logger.info("Indexed #{idx + 1}/#{paths.size} paths")
         rescue Parser::SyntaxError => e
-          Gelauto::Logger.error("Syntax error in #{path}, skipping")
+          YarnAnnotate::Logger.error("Syntax error in #{path}, skipping")
         end
       end
     end
@@ -103,7 +103,7 @@ module Gelauto
         if md = method_index.find(tp.path, tp.lineno)
           md.args.each do |arg|
             var = tp.binding.local_variable_get(arg.name)
-            arg.types << Gelauto.introspect(var)
+            arg.types << YarnAnnotate.introspect(var)
           end
         end
       end
@@ -112,14 +112,14 @@ module Gelauto
     def return_trace
       @return_trace ||= TracePoint.new(:return) do |tp|
         if md = method_index.find(tp.path, tp.lineno)
-          md.return_types << Gelauto.introspect(tp.return_value)
+          md.return_types << YarnAnnotate.introspect(tp.return_value)
         end
       end
     end
   end
 end
 
-Gelauto.register_type(::Hash, Gelauto::HashType)
-Gelauto.register_type(::Array, Gelauto::ArrayType)
-Gelauto.register_type(::TrueClass, Gelauto::BooleanType)
-Gelauto.register_type(::FalseClass, Gelauto::BooleanType)
+YarnAnnotate.register_type(::Hash, YarnAnnotate::HashType)
+YarnAnnotate.register_type(::Array, YarnAnnotate::ArrayType)
+YarnAnnotate.register_type(::TrueClass, YarnAnnotate::BooleanType)
+YarnAnnotate.register_type(::FalseClass, YarnAnnotate::BooleanType)

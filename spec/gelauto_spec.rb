@@ -2,17 +2,17 @@
 
 require 'spec_helper'
 
-describe Gelauto do
+describe YarnAnnotate do
   before { index.reset }
 
-  let(:index) { Gelauto.method_index }
+  let(:index) { YarnAnnotate.method_index }
 
   context 'with simple types' do
     it 'identifies method signatures correctly' do
       img = nil
 
-      Gelauto.discover do
-        img = GelautoSpecs::Image.new('foo.jpg', 800, 400)
+      YarnAnnotate.discover do
+        img = YarnAnnotateSpecs::Image.new('foo.jpg', 800, 400)
         expect(img.aspect_ratio).to eq(2.0)
       end
 
@@ -27,30 +27,30 @@ describe Gelauto do
 
   context 'with Sorbet generic types' do
     it 'uses T.nilable with T.any correctly' do
-      Gelauto.discover do
-        GelautoSpecs::Utility.safe_to_string(nil)
-        GelautoSpecs::Utility.safe_to_string(1.0)
-        GelautoSpecs::Utility.safe_to_string(2)
+      YarnAnnotate.discover do
+        YarnAnnotateSpecs::Utility.safe_to_string(nil)
+        YarnAnnotateSpecs::Utility.safe_to_string(1.0)
+        YarnAnnotateSpecs::Utility.safe_to_string(2)
       end
 
-      safe_to_string = get_indexed_method(GelautoSpecs::Utility, :safe_to_string)
+      safe_to_string = get_indexed_method(YarnAnnotateSpecs::Utility, :safe_to_string)
       expect(safe_to_string.to_sig).to eq('sig { params(input: T.nilable(T.any(Float, Integer))).returns(String) }')
     end
 
     it 'uses T.Hash and T::Array with T.untyped correctly' do
-      Gelauto.discover do
-        GelautoSpecs::Utility.safe_get_keys({})
+      YarnAnnotate.discover do
+        YarnAnnotateSpecs::Utility.safe_get_keys({})
       end
 
-      safe_get_keys = get_indexed_method(GelautoSpecs::Utility, :safe_get_keys)
+      safe_get_keys = get_indexed_method(YarnAnnotateSpecs::Utility, :safe_get_keys)
       expect(safe_get_keys.to_sig).to eq('sig { params(input: T::Hash[T.untyped, T.untyped]).returns(T::Array[T.untyped]) }')
     end
   end
 
   context 'with generic types' do
     before do
-      Gelauto.discover do
-        @client = GelautoSpecs::Client.new(url: 'http://foo.com', username: 'bar')
+      YarnAnnotate.discover do
+        @client = YarnAnnotateSpecs::Client.new(url: 'http://foo.com', username: 'bar')
         @response = @client.request('body', param1: 'abc', param2: 'def')
         expect(@response.to_a).to eq([200, 'it worked!'])
       end
@@ -65,7 +65,7 @@ describe Gelauto do
     it 'identifies signature for Client#request' do
       request = get_indexed_method(@client, :request)
       expect(request).to accept(body: String, headers: { Hash => { key: Symbol, value: String } })
-      expect(request).to hand_back(GelautoSpecs::Response)
+      expect(request).to hand_back(YarnAnnotateSpecs::Response)
     end
 
     it 'identifies signature for Response#initialize' do
@@ -82,8 +82,8 @@ describe Gelauto do
 
   context 'with existing signatures' do
     before do
-      Gelauto.discover do
-        @request = GelautoSpecs::Request.new
+      YarnAnnotate.discover do
+        @request = YarnAnnotateSpecs::Request.new
         @request.to_a('Hello', 'World')
         @request.to_s(100)
       end
@@ -103,13 +103,13 @@ describe Gelauto do
 
   context 'with nested generic types' do
     before do
-      Gelauto.discover do
-        GelautoSpecs::System.configure(YAML.load_file('spec/support/config.yml'))
+      YarnAnnotate.discover do
+        YarnAnnotateSpecs::System.configure(YAML.load_file('spec/support/config.yml'))
       end
     end
 
     it 'identifies signatures for System.configure' do
-      configure = get_indexed_method(GelautoSpecs::System, :configure)
+      configure = get_indexed_method(YarnAnnotateSpecs::System, :configure)
       expect(configure).to accept(
         config: {
           Hash => {

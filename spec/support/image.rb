@@ -1,4 +1,4 @@
-module GelautoSpecs
+module YarnAnnotateSpecs
   class Image
     attr_reader :path, :width, :height
 
@@ -14,4 +14,4 @@ module GelautoSpecs
   end
 end
 
-Gelauto.paths << __FILE__
+YarnAnnotate.paths << __FILE__

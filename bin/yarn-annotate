@@ -2,14 +2,14 @@
 
 $:.push(File.expand_path(File.join(%w(.. lib)), __dir__))
 
-require 'gelauto'
-require 'gelauto/version'
+require 'yarn_annotate'
+require 'yarn_annotate/version'
 require 'gli'
 
-module Gelauto
+module YarnAnnotate
   module CLI
     def self.print_global_help
-      puts "\nExample Usage: gelauto [ --silent ] run [ --annotate ] [ --rbi ] $(find . -name '*.rb') -- bundle exec rspec spec/\n\n"
+      puts "\nExample Usage: yarn-annotate [ --silent ] run [ --annotate ] [ --rbi ] $(find . -name '*.rb') -- bundle exec rspec spec/\n\n"
       commands[:help].execute({}, {}, [])
     end
 
@@ -17,7 +17,7 @@ module Gelauto
 
     program_desc 'Automatically annotate methods with Sorbet type signatures.'
 
-    version Gelauto::VERSION
+    version YarnAnnotate::VERSION
 
     subcommand_option_handling :normal
     default_command :run
@@ -26,7 +26,7 @@ module Gelauto
     default_value false
     switch [:s, :silent]
 
-    desc 'Run the given command with Gelauto and optionally annotate files.'
+    desc 'Run the given command with YarnAnnotate and optionally annotate files.'
     command :run do |c|
       c.desc 'Write discovered type signatures into Ruby files.'
       c.default_value false
@@ -53,33 +53,33 @@ module Gelauto
         end
 
         paths, _, cmd = args.chunk_while { |arg1, arg2| arg1 != '--' && arg2 != '--' }.to_a
-        Gelauto.paths += paths
+        YarnAnnotate.paths += paths
 
-        exe = Gelauto::CLIUtils.which(cmd[0]) || cmd[0]
+        exe = YarnAnnotate::CLIUtils.which(cmd[0]) || cmd[0]
         cmd.shift
 
         old_argv = ARGV.dup
         old_path = $:.dup
 
         begin
-          Gelauto.setup
+          YarnAnnotate.setup
           ARGV.replace(cmd)
           Dir.chdir(options[:dir])
           load exe
         ensure
-          Gelauto.teardown
+          YarnAnnotate.teardown
           ARGV.replace(old_argv)
           $:.replace(old_path)
 
           if options[:annotate]
-            Gelauto.each_absolute_path do |path|
-              Gelauto.annotate_file(path)
-              Gelauto::Logger.info("Annotated #{path}")
+            YarnAnnotate.each_absolute_path do |path|
+              YarnAnnotate.annotate_file(path)
+              YarnAnnotate::Logger.info("Annotated #{path}")
             end
           end
 
           if options[:rbi]
-            rbi_str = Gelauto::Rbi.new(Gelauto.method_index).to_s
+            rbi_str = YarnAnnotate::Rbi.new(YarnAnnotate.method_index).to_s
 
             if options[:rbi] == '-'
               puts rbi_str
@@ -93,7 +93,7 @@ module Gelauto
 
     pre do |global_options, _command, _options, _args|
       if global_options[:silent]
-        Gelauto.logger = Gelauto::NullLogger.new
+        YarnAnnotate.logger = YarnAnnotate::NullLogger.new
       end
 
       true
@@ -102,8 +102,8 @@ module Gelauto
 end
 
 if ARGV.empty?
-  Gelauto::CLI.print_global_help
+  YarnAnnotate::CLI.print_global_help
   exit 1
 end
 
-exit Gelauto::CLI.run(ARGV)
+exit YarnAnnotate::CLI.run(ARGV)

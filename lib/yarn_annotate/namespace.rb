@@ -1,4 +1,4 @@
-module Gelauto
+module YarnAnnotate
   class Namespace
     attr_reader :name, :type
 

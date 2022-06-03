@@ -1,6 +1,6 @@
 require 'set'
 
-module Gelauto
+module YarnAnnotate
   class MethodDef
     attr_reader :name, :args, :nesting, :return_types
 

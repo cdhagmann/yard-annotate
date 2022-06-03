@@ -1,4 +1,4 @@
-module Gelauto
+module YarnAnnotate
   class MethodIndex
     attr_reader :index, :sig_index
 

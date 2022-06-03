@@ -1,6 +1,6 @@
 require 'set'
 
-module Gelauto
+module YarnAnnotate
   class Var
     attr_reader :name
     attr_accessor :types

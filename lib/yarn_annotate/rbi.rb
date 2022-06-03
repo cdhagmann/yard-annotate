@@ -1,8 +1,8 @@
-module Gelauto
+module YarnAnnotate
   class Rbi
     attr_reader :method_index, :paths
 
-    def initialize(method_index, paths = Gelauto.paths)
+    def initialize(method_index, paths = YarnAnnotate.paths)
       @method_index = method_index
       @paths = paths
     end

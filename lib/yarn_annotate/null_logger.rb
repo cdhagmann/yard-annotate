@@ -1,6 +1,6 @@
 require 'logger'
 
-module Gelauto
+module YarnAnnotate
   class NullLogger < ::Logger
     def initialize(*)
       super(File.open(File::NULL, 'w'))

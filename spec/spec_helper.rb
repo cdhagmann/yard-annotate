@@ -1,7 +1,7 @@
 $:.push(File.dirname(__FILE__))
 
 require 'rspec'
-require 'gelauto'
+require 'yarn-annotate'
 require 'pry-byebug'
 
 Dir.chdir('spec') do
@@ -11,23 +11,23 @@ Dir.chdir('spec') do
 end
 
 RSpec.configure do |config|
-  config.include(GelautoSpecs::AcceptMatcher)
-  config.include(GelautoSpecs::HandBackMatcher)
+  config.include(YarnAnnotateSpecs::AcceptMatcher)
+  config.include(YarnAnnotateSpecs::HandBackMatcher)
 
   config.include(
     Module.new do
       def get_indexed_method(obj, method_name)
         path, lineno = obj.method(method_name).source_location
-        Gelauto.method_index.find(path, lineno)
+        YarnAnnotate.method_index.find(path, lineno)
       end
 
       def annotate(obj, method_name, code)
         path, _lineno = obj.method(method_name).source_location
-        Gelauto.method_index.annotate(path, code)
+        YarnAnnotate.method_index.annotate(path, code)
       end
     end
   )
 end
 
 # quiet logs for test runs
-Gelauto.logger.level = :fatal
+YarnAnnotate.logger.level = :fatal

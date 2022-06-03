@@ -1,6 +1,6 @@
 require 'sorbet-runtime'
 
-module GelautoSpecs
+module YarnAnnotateSpecs
   class Response
     attr_reader :status, :body
 
@@ -46,4 +46,4 @@ module GelautoSpecs
   end
 end
 
-Gelauto.paths << __FILE__
+YarnAnnotate.paths << __FILE__

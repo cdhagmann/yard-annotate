@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'sorbet-runtime'
+gem 'yard'
 
 group :development do
   gem 'pry-byebug'

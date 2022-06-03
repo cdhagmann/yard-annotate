@@ -2,7 +2,7 @@ require 'bundler'
 require 'rspec/core/rake_task'
 require 'rubygems/package_task'
 
-require 'gelauto'
+require 'yarn-annotate'
 
 Bundler::GemHelper.install_tasks
 

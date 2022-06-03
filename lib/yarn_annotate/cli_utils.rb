@@ -1,4 +1,4 @@
-module Gelauto
+module YarnAnnotate
   module CLIUtils
     EXTS = (ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']).freeze
 

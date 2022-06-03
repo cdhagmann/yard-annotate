@@ -1,4 +1,4 @@
-module Gelauto
+module YarnAnnotate
   class ArgList
     include Enumerable
 

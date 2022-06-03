@@ -1,8 +1,8 @@
-module Gelauto
+module YarnAnnotate
   class ArrayType < GenericType
     def self.introspect(obj)
       new.tap do |var|
-        obj.each { |elem| var[:elem] << Gelauto.introspect(elem) }
+        obj.each { |elem| var[:elem] << YarnAnnotate.introspect(elem) }
       end
     end
 

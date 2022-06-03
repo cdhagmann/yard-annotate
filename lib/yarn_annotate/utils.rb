@@ -1,4 +1,4 @@
-module Gelauto
+module YarnAnnotate
   module Utils
     def each_absolute_path(paths)
       return to_enum(__method__, paths) unless block_given?

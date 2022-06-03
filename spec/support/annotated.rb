@@ -1,6 +1,6 @@
 require 'sorbet-runtime'
 
-module GelautoSpecs
+module YarnAnnotateSpecs
   class Request
     extend T::Sig
     sig { params(status: String, body: String).returns(T::Array[String]) }
@@ -14,4 +14,4 @@ module GelautoSpecs
   end
 end
 
-Gelauto.paths << __FILE__
+YarnAnnotate.paths << __FILE__

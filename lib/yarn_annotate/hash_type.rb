@@ -1,10 +1,10 @@
-module Gelauto
+module YarnAnnotate
   class HashType < GenericType
     def self.introspect(obj)
       new.tap do |var|
         obj.each_pair do |key, value|
-          var[:key] << Gelauto.introspect(key)
-          var[:value] << Gelauto.introspect(value)
+          var[:key] << YarnAnnotate.introspect(key)
+          var[:value] << YarnAnnotate.introspect(value)
         end
       end
     end

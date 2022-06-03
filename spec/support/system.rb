@@ -1,4 +1,4 @@
-module GelautoSpecs
+module YarnAnnotateSpecs
   class System
     def self.configure(config)
       @config = config
@@ -7,4 +7,4 @@ module GelautoSpecs
   end
 end
 
-Gelauto.paths << __FILE__
+YarnAnnotate.paths << __FILE__

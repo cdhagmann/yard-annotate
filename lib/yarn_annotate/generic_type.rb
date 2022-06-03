@@ -1,6 +1,6 @@
 require 'set'
 
-module Gelauto
+module YarnAnnotate
   class GenericType
     attr_reader :ruby_type, :generic_args
 

@@ -1,6 +1,6 @@
 require 'set'
 
-module Gelauto
+module YarnAnnotate
   class TypeSet
     include Enumerable
 
